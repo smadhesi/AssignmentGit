@@ -3,6 +3,9 @@ package model;
 public class Weather {
 
     private String id;
+    private String main;
+    private String description;
+    private String icons;
 
     public String getId() {
         return id;
@@ -27,17 +30,4 @@ public class Weather {
     public void setDescription(String description) {
         this.description = description;
     }
-
-    public String getIcons() {
-        return icons;
-    }
-
-    public void setIcons(String icons) {
-        this.icons = icons;
-    }
-
-    private String main;
-        private String description;
-        private String icons;
-
 }

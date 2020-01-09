@@ -1,5 +1,6 @@
 package Scripts;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import model.Forecast;
 import model.People;
 import model.Weather;
@@ -9,6 +10,8 @@ import org.testng.annotations.Test;
 import service.DataService;
 import service.RandomDataGenerator;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -26,21 +29,27 @@ public class Scripts {
     private List<People> peopleWithCitiesOfClearWeather;
     private ConcurrentHashMap<String,List<Forecast>> weathermap;
     private List<String> citiesWithGoodWeather;
+    ObjectMapper mapper;
+    String dir;
+
     @BeforeClass
-    public void testDataGenerator(){
+    public void testDataGenerator() throws IOException {
         dataService =new DataService();
         randomDataGenerator = new RandomDataGenerator();
+        dir = System.getProperty("user.dir")+"\\target\\";
         people = randomDataGenerator.generateRandomData("United States","US");
+        mapper= new ObjectMapper();
     }
     @Test(priority = 1)
-    public void getWeatherForecastByCityName(){
+    public void getWeatherForecastByCityName() throws IOException {
         peopleWithForeacast = people.parallelStream().limit(20).map(x->getWeatherDesc(x)).collect(Collectors.toList());
         Assertions.assertThat(peopleWithForeacast.size()).isEqualTo(20);
     }
     @Test(priority=2)
-    public void getWeeklyIncomeInEuro(){
+    public void getWeeklyIncomeInEuro() throws IOException {
         String euroRate = dataService.fetchForexRatesForEUR(people.get(0).getCurrency());
         people.parallelStream().map(x->getWeeklyIncomeInEuro(x,euroRate)).collect(Collectors.toList());
+        mapper.writeValue(new File(dir+"people.json"),people);
     }
 
     @Test(priority = 3)
@@ -54,8 +63,9 @@ public class Scripts {
     }
 
     @Test(priority=5)
-    public void suggestPeopleToVisitCityWithGoodWeather(){
+    public void suggestPeopleToVisitCityWithGoodWeather() throws IOException {
         peopleWithCitiesOfBadWeather.parallelStream().map(x->suggestPeopleCitiesOfGoodWeather(x)).collect(Collectors.toList());
+        mapper.writeValue(new File(dir+"peopleWithSuggestedCitiesToVisit.json"),peopleWithCitiesOfBadWeather);
     }
 
     private People getWeatherDesc(People people){
