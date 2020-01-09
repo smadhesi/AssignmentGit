@@ -1,0 +1,15 @@
+cityConfig:
+  hostname: andruxnet-world-cities-v1.p.rapidapi.com/
+  apikey: 7ca38a7f20msh2140be71aabf335p19c6adjsnc0a36e579ea8
+  authorizationHeader: x-rapidapi-key
+
+weatherConfig:
+  hostname: api.openweathermap.org
+  path: /data/2.5/forecast
+  apikey: aa6a7c5ea15334019c52a13726548d13
+
+currencyConfig:
+  baseUri: https://restcountries.eu/rest/v2/name/
+
+forexConfig:
+  baseUri: https://api.exchangeratesapi.io/latest
